@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: samba
+  name: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: samba
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/: "true"
+        io.kompose.service: samba
+    spec:
+      containers:
+        - args:
+            - samba.sh
+            - -s
+            - fileshare;/fileshare;yes;no;yes;all
+          image: sixeyed/samba
+          name: winshare
+          ports:
+            - containerPort: 139
+            - containerPort: 445
+            - containerPort: 137
+              protocol: UDP
+            - containerPort: 138
+              protocol: UDP
+          resources: {}
+          volumeMounts:
+            - mountPath: /fileshare
+              name: samba-claim0
+      hostname: samba
+      restartPolicy: Always
+      volumes:
+        - name: samba-claim0
+          persistentVolumeClaim:
+            claimName: samba-claim0
+status: {}

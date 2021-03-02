@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: organizr
+  namespace: ht
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: organizr
+  template:
+    metadata:
+      labels:
+        k8s-app: organizr
+    strategy:
+      type: Recreate
+    spec:
+      containers:
+        - env:
+            - name: PGID
+            - name: PUID
+            - name: TZ
+            - name: fpm
+              value: "false"
+          image: organizr/organizr:latest
+          name: organizr
+          ports:
+          - containerPort: 80
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: organizr-claim0
+      restartPolicy: Always
+      volumes:
+        - name: organizr-claim0
+          persistentVolumeClaim:
+            claimName: organizr-claim0

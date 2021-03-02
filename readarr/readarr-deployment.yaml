@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+    traefik.backend: readarr
+    traefik.docker.network: traefik_proxy
+    traefik.enable: "true"
+    traefik.frontend.headers.SSLHost: frost.haus
+    traefik.frontend.headers.SSLRedirect: "true"
+    traefik.frontend.headers.STSIncludeSubdomains: "true"
+    traefik.frontend.headers.STSPreload: "true"
+    traefik.frontend.headers.STSSeconds: "315360000"
+    traefik.frontend.headers.browserXSSFilter: "true"
+    traefik.frontend.headers.contentTypeNosniff: "true"
+    traefik.frontend.headers.forceSTSHeader: "true"
+    traefik.frontend.headers.frameDeny: "false"
+    traefik.frontend.rule: Host:readarr.
+    traefik.port: "8787"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: readarr
+  name: readarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: readarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+        traefik.backend: readarr
+        traefik.docker.network: traefik_proxy
+        traefik.enable: "true"
+        traefik.frontend.headers.SSLHost: frost.haus
+        traefik.frontend.headers.SSLRedirect: "true"
+        traefik.frontend.headers.STSIncludeSubdomains: "true"
+        traefik.frontend.headers.STSPreload: "true"
+        traefik.frontend.headers.STSSeconds: "315360000"
+        traefik.frontend.headers.browserXSSFilter: "true"
+        traefik.frontend.headers.contentTypeNosniff: "true"
+        traefik.frontend.headers.forceSTSHeader: "true"
+        traefik.frontend.headers.frameDeny: "false"
+        traefik.frontend.rule: Host:readarr.
+        traefik.port: "8787"
+      creationTimestamp: null
+      labels:
+        io.kompose.network/: "true"
+        io.kompose.service: readarr
+    spec:
+      containers:
+        - env:
+            - name: PGID
+            - name: PUID
+            - name: TZ
+            - name: UMASK_SET
+              value: "002"
+          image: hotio/readarr:nightly
+          name: readarr
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: readarr-claim0
+            - mountPath: /downloads
+              name: readarr-claim1
+            - mountPath: /books
+              name: readarr-claim2
+      restartPolicy: Always
+      volumes:
+        - name: readarr-claim0
+          persistentVolumeClaim:
+            claimName: readarr-claim0
+        - name: readarr-claim1
+          persistentVolumeClaim:
+            claimName: readarr-claim1
+        - name: readarr-claim2
+          persistentVolumeClaim:
+            claimName: readarr-claim2
+status: {}

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ouroboros
+  name: ouroboros
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ouroboros
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/: "true"
+        io.kompose.service: ouroboros
+    spec:
+      containers:
+        - env:
+            - name: CLEANUP
+              value: "true"
+            - name: IGNORE
+              value: mongo influxdb postgres mariadb
+            - name: INTERVAL
+              value: "300"
+            - name: LOG_LEVEL
+              value: info
+            - name: SELF_UPDATE
+              value: "true"
+            - name: TZ
+              value: America/Chicago
+          image: pyouroboros/ouroboros:latest
+          name: ouroboros
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: ouroboros-claim0
+      restartPolicy: Always
+      volumes:
+        - name: ouroboros-claim0
+          persistentVolumeClaim:
+            claimName: ouroboros-claim0
+status: {}

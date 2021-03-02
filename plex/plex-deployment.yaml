@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: plex
+  name: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: plex
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/: "true"
+        io.kompose.service: plex
+    spec:
+      containers:
+        - env:
+            - name: DOCKER_MODS
+              value: linuxserver/mods:plex-absolute-hama
+            - name: PGID
+            - name: PLEX_CLAIM
+            - name: PUID
+            - name: TZ
+              value: America/Chicago
+            - name: VERSION
+              value: public
+          image: plexinc/pms-docker:plexpass
+          name: plex
+          resources: {}
+          volumeMounts:
+            - mountPath: /download-reprocess
+              name: plex-claim0
+            - mountPath: /config
+              name: plex-claim1
+            - mountPath: /tmp
+              name: plex-claim2
+            - mountPath: /transcode
+              name: plex-claim3
+            - mountPath: /data/tvshows
+              name: plex-claim4
+            - mountPath: /data/photos
+              name: plex-claim5
+            - mountPath: /data/movies
+              name: plex-claim6
+            - mountPath: /shared
+              name: plex-claim7
+      restartPolicy: Always
+      volumes:
+        - name: plex-claim0
+          persistentVolumeClaim:
+            claimName: plex-claim0
+        - name: plex-claim1
+          persistentVolumeClaim:
+            claimName: plex-claim1
+        - name: plex-claim2
+          persistentVolumeClaim:
+            claimName: plex-claim2
+        - name: plex-claim3
+          persistentVolumeClaim:
+            claimName: plex-claim3
+        - name: plex-claim4
+          persistentVolumeClaim:
+            claimName: plex-claim4
+        - name: plex-claim5
+          persistentVolumeClaim:
+            claimName: plex-claim5
+        - name: plex-claim6
+          persistentVolumeClaim:
+            claimName: plex-claim6
+        - name: plex-claim7
+          persistentVolumeClaim:
+            claimName: plex-claim7
+status: {}

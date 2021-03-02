@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+    traefik.backend: bazarr
+    traefik.docker.network: traefik_proxy
+    traefik.enable: "true"
+    traefik.frontend.headers.SSLHost: frost.haus
+    traefik.frontend.headers.SSLRedirect: "true"
+    traefik.frontend.headers.STSIncludeSubdomains: "true"
+    traefik.frontend.headers.STSPreload: "true"
+    traefik.frontend.headers.STSSeconds: "315360000"
+    traefik.frontend.headers.browserXSSFilter: "true"
+    traefik.frontend.headers.contentTypeNosniff: "true"
+    traefik.frontend.headers.forceSTSHeader: "true"
+    traefik.frontend.headers.frameDeny: "false"
+    traefik.frontend.rule: Host:bazarr.
+    traefik.port: "6767"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: bazarr
+  name: bazarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: bazarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+        traefik.backend: bazarr
+        traefik.docker.network: traefik_proxy
+        traefik.enable: "true"
+        traefik.frontend.headers.SSLHost: frost.haus
+        traefik.frontend.headers.SSLRedirect: "true"
+        traefik.frontend.headers.STSIncludeSubdomains: "true"
+        traefik.frontend.headers.STSPreload: "true"
+        traefik.frontend.headers.STSSeconds: "315360000"
+        traefik.frontend.headers.browserXSSFilter: "true"
+        traefik.frontend.headers.contentTypeNosniff: "true"
+        traefik.frontend.headers.forceSTSHeader: "true"
+        traefik.frontend.headers.frameDeny: "false"
+        traefik.frontend.rule: Host:bazarr.
+        traefik.port: "6767"
+      creationTimestamp: null
+      labels:
+        io.kompose.network/traefik_proxy: "true"
+        io.kompose.service: bazarr
+    spec:
+      containers:
+        - env:
+            - name: PGID
+            - name: PUID
+            - name: TZ
+            - name: UMASK_SET
+              value: "022"
+          image: linuxserver/bazarr
+          name: bazarr
+          resources: {}
+          volumeMounts:
+            - mountPath: /movies
+              name: bazarr-claim0
+            - mountPath: /tv
+              name: bazarr-claim1
+            - mountPath: /config
+              name: bazarr-claim2
+      restartPolicy: Always
+      volumes:
+        - name: bazarr-claim0
+          persistentVolumeClaim:
+            claimName: bazarr-claim0
+        - name: bazarr-claim1
+          persistentVolumeClaim:
+            claimName: bazarr-claim1
+        - name: bazarr-claim2
+          persistentVolumeClaim:
+            claimName: bazarr-claim2
+status: {}

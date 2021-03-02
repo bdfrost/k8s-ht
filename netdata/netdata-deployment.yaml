@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+    traefik.backend: netdata
+    traefik.docker.network: traefik_proxy
+    traefik.enable: "true"
+    traefik.frontend.headers.SSLHost: frost.haus
+    traefik.frontend.headers.SSLRedirect: "true"
+    traefik.frontend.headers.STSIncludeSubdomains: "true"
+    traefik.frontend.headers.STSPreload: "true"
+    traefik.frontend.headers.STSSeconds: "315360000"
+    traefik.frontend.headers.browserXSSFilter: "true"
+    traefik.frontend.headers.contentTypeNosniff: "true"
+    traefik.frontend.headers.forceSTSHeader: "true"
+    traefik.frontend.headers.frameDeny: "false"
+    traefik.frontend.rule: Host:netdata.
+    traefik.port: "19999"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: netdata
+  name: netdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: netdata
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+        traefik.backend: netdata
+        traefik.docker.network: traefik_proxy
+        traefik.enable: "true"
+        traefik.frontend.headers.SSLHost: frost.haus
+        traefik.frontend.headers.SSLRedirect: "true"
+        traefik.frontend.headers.STSIncludeSubdomains: "true"
+        traefik.frontend.headers.STSPreload: "true"
+        traefik.frontend.headers.STSSeconds: "315360000"
+        traefik.frontend.headers.browserXSSFilter: "true"
+        traefik.frontend.headers.contentTypeNosniff: "true"
+        traefik.frontend.headers.forceSTSHeader: "true"
+        traefik.frontend.headers.frameDeny: "false"
+        traefik.frontend.rule: Host:netdata.
+        traefik.port: "19999"
+      creationTimestamp: null
+      labels:
+        io.kompose.network/traefik_proxy: "true"
+        io.kompose.service: netdata
+    spec:
+      containers:
+        - env:
+            - name: PGID
+            - name: PUID
+            - name: TZ
+          image: netdata/netdata:latest
+          name: netdata
+          resources: {}
+          volumeMounts:
+            - mountPath: /host/proc
+              name: netdata-claim0
+              readOnly: true
+            - mountPath: /host/sys
+              name: netdata-claim1
+              readOnly: true
+            - mountPath: /var/run/docker.sock
+              name: netdata-claim2
+            - mountPath: /etc/netdata
+              name: netdata-claim3
+      restartPolicy: Always
+      volumes:
+        - name: netdata-claim0
+          persistentVolumeClaim:
+            claimName: netdata-claim0
+            readOnly: true
+        - name: netdata-claim1
+          persistentVolumeClaim:
+            claimName: netdata-claim1
+            readOnly: true
+        - name: netdata-claim2
+          persistentVolumeClaim:
+            claimName: netdata-claim2
+        - name: netdata-claim3
+          persistentVolumeClaim:
+            claimName: netdata-claim3
+status: {}
