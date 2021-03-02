@@ -1,0 +1,16 @@
+*.tfstate.backup
+*.tfstate
+*.retry
+.venv
+.DS_Store
+*.pwd
+*.pem
+*.env
+*.swp
+*.pwd
+*.pem
+.envrc
+.plugins
+*.pyc
+*secret*
+*configmap*
