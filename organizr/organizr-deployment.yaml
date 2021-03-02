@@ -23,8 +23,8 @@ spec:
           image: organizr/organizr:latest
           name: organizr
           envFrom:
-          - configMapRef:
-            name: env-configmap 
+          - configMapRef: 
+              name: env-configmap 
           ports:
           - containerPort: 80
           resources: {}
