@@ -18,8 +18,7 @@ spec:
             - name: PGID
             - name: PUID
             - name: TZ
-            - name: fpm
-              value: "false"
+            - fpm: false
           image: organizr/organizr:latest
           name: organizr
           ports:
