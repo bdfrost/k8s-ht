@@ -15,9 +15,6 @@ spec:
     spec:
       containers:
         - env:
-            - name: PGID
-            - name: PUID
-            - name: TZ
             - name: fpm
               value: "false"
           image: organizr/organizr:latest
