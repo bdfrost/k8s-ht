@@ -12,8 +12,6 @@ spec:
     metadata:
       labels:
         k8s-app: organizr
-    strategy:
-      type: Recreate
     spec:
       containers:
         - env:
