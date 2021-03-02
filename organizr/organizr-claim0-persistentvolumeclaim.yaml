@@ -3,6 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: organizr-claim0
   namespace: ht
+  labels:
+    app: organizr
+    version: v1
 spec:
   accessModes:
     - ReadWriteOnce

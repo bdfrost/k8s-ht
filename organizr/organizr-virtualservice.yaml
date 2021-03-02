@@ -3,6 +3,9 @@ kind: VirtualService
 metadata:
   name: organizr
   namespace: ht
+  labels:
+    app: organizr
+    version: v1
 spec:
   hosts:
     - the.frost.haus

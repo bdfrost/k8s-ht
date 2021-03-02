@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: organizr
   namespace: ht
+  labels:
+    app: organizr
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: organizr
+      app: organizr
   template:
     metadata:
       labels:
-        k8s-app: organizr
+        app: organizr
     spec:
       containers:
         - env:
@@ -24,7 +27,10 @@ spec:
               name: env-configmap 
           ports:
           - containerPort: 80
-          resources: {}
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           volumeMounts:
             - mountPath: /config
               name: organizr-claim0

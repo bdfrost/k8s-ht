@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: speedtest
   namespace: ht
+  labels:
+    app: speedtest
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: speedtest
+      app: speedtest
   template:
     metadata:
       labels:
-        k8s-app: speedtest
+        app: speedtest
     spec:
       containers:
         - env:
@@ -22,7 +25,10 @@ spec:
           envFrom:
           - configMapRef: 
               name: env-configmap 
-          resources: {}
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           volumeMounts:
             - mountPath: /config
               name: speedtest-claim0

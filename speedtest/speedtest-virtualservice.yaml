@@ -3,6 +3,9 @@ kind: VirtualService
 metadata:
   name: speedtest
   namespace: ht
+  labels:
+    app: speedtest
+    version: v1
 spec:
   hosts:
     - speedtest.the.frost.haus
