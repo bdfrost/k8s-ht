@@ -1,68 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.22.0 (HEAD)
-    traefik.backend: speedtest
-    traefik.docker.network: traefik_proxy
-    traefik.enable: "true"
-    traefik.frontend.headers.SSLHost: frost.haus
-    traefik.frontend.headers.SSLRedirect: "true"
-    traefik.frontend.headers.STSIncludeSubdomains: "true"
-    traefik.frontend.headers.STSPreload: "true"
-    traefik.frontend.headers.STSSeconds: "315360000"
-    traefik.frontend.headers.browserXSSFilter: "true"
-    traefik.frontend.headers.contentTypeNosniff: "true"
-    traefik.frontend.headers.forceSTSHeader: "true"
-    traefik.frontend.headers.frameDeny: "false"
-    traefik.frontend.rule: Host:speedtest.
-    traefik.port: "80"
-  creationTimestamp: null
-  labels:
-    io.kompose.service: speedtest
   name: speedtest
+  namespace: ht
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: speedtest
-  strategy:
-    type: Recreate
+      k8s-app: speedtest
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.22.0 (HEAD)
-        traefik.backend: speedtest
-        traefik.docker.network: traefik_proxy
-        traefik.enable: "true"
-        traefik.frontend.headers.SSLHost: frost.haus
-        traefik.frontend.headers.SSLRedirect: "true"
-        traefik.frontend.headers.STSIncludeSubdomains: "true"
-        traefik.frontend.headers.STSPreload: "true"
-        traefik.frontend.headers.STSSeconds: "315360000"
-        traefik.frontend.headers.browserXSSFilter: "true"
-        traefik.frontend.headers.contentTypeNosniff: "true"
-        traefik.frontend.headers.forceSTSHeader: "true"
-        traefik.frontend.headers.frameDeny: "false"
-        traefik.frontend.rule: Host:speedtest.
-        traefik.port: "80"
-      creationTimestamp: null
       labels:
-        io.kompose.network/: "true"
-        io.kompose.service: speedtest
+        k8s-app: speedtest
     spec:
       containers:
         - env:
             - name: OOKLA_EULA_GDPR
               value: "true"
-            - name: PGID
-            - name: PUID
-            - name: TZ
-              value: America/Chicago
           image: henrywhitaker3/speedtest-tracker
           name: speedtest
+          envFrom:
+          - configMapRef: 
+              name: env-configmap 
           resources: {}
           volumeMounts:
             - mountPath: /config
@@ -72,4 +31,3 @@ spec:
         - name: speedtest-claim0
           persistentVolumeClaim:
             claimName: speedtest-claim0
-status: {}
